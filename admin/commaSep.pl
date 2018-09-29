@@ -7,12 +7,16 @@
 # to get starter file: murphy, email class as mac or windows, copy from mailer window
 
 #read in file
-$filename = $ARGV[0]; 
+$filename = $ARGV[0];
+$tempPW = $ARGV[1]; 
+$idFile = "IDs-".$filename;
+$idPWFile = "IDsPWs-".$filename;
 open FILE, $filename||die $!;
 $emails=<FILE>;
+print $emails."\n";
 close(FILE);
 chomp $emails; #remove newline from EOF
-$emails .= ";";  # delimit last email - kind of lame
+#$emails .= ";";  # delimit last email - kind of lame - didn't need for 2018?
 #remove domain, semincolon, space, add newlines
 #$emails =~ s/@.*?, ?/\n/g;  # could make this more robust
 $emails =~ s/@.*?;/\n/g;  # could make this more robust
@@ -20,16 +24,20 @@ $emails =~ s/@.*?;/\n/g;  # could make this more robust
 @arrEmails=split("\n", $emails);
 map ($_ = lc($_), @arrEmails);
 
-open(FILE, "> IDs.txt") || die "can't open IDs.txt"; #for change loop and 
+open FILE, "> ".$idFile||die "can't open".$idFile; #for change loop and 
+print "\nopened ".$idFile."\n";
 #also can be used for deleting users
 @justUserIDs = @arrEmails;
 map ($_ .= "\n", @justUserIDs); # add back newlines
+print @justUserIDs;
 print FILE @justUserIDs;
 close (FILE);
 
-open(FILE, "> IDsPWs.txt") || die "can't open IDsPWs.txt"; 
+open FILE, "> ".$idPWFile||die "can't open".$idPWFile; 
 @userIDsPWs = @arrEmails;
-map ($_ .= ":zfxA1i08\n", @userIDsPWs); # add  newlines & default PW
+print "opened ".$idPWFile."\n";
+map ($_ .= ":".$tempPW."\n", @userIDsPWs); # add  newlines & default PW THIS NEEDS RANDOMIZATION
+print @userIDsPWs;
 print FILE @userIDsPWs;
 close (FILE);
 

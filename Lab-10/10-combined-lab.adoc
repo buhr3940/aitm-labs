@@ -66,29 +66,31 @@ You should be able to run the first scan as the lynis directions suggest. This s
     - Details  : AllowAgentForwarding (YES --> NO)
       https://cisofy.com/controls/SSH-7408/
 
-  * Add a legal banner to /etc/issue, to warn unauthorized users [BANN-7126]
-      https://cisofy.com/controls/BANN-7126/
-      
-  * Configure minimum password age in /etc/login.defs [AUTH-9286] 
+  * Configure minimum password age in /etc/login.defs [AUTH-9286]
       https://cisofy.com/controls/AUTH-9286/
 
-  * Configure maximum password age in /etc/login.defs [AUTH-9286] 
+  * Configure maximum password age in /etc/login.defs [AUTH-9286]
       https://cisofy.com/controls/AUTH-9286/
 ....
 
-Let's fix the minium and maxium password age issue in login.defs. 
+Let's fix the minium and maxium password age issue in login.defs.
 
 Open file /etc/login.defs using text editor:
-# vi /etc/login.defs
+# sudo nano /etc/login.defs
 
 Setup (sample) values as follows:
-PASS_MAX_DAYS 30
-PASS_MIN_DAYS 1
-PASS_WARN_AGE 7
+
+ PASS_MAX_DAYS 30
+ PASS_MIN_DAYS 1
+ PASS_WARN_AGE 7
 
 To restart sshd on ubuntu 16, use the command:
 
  sudo systemctl restart sshd
+
+For earlier versions of Ubuntu, use:
+
+ sudo service ssh restart
 
 Between these two resources you should be able to fix the issue. If you have questions, post them to Slack. When you have fixed the issue, run the scan again and confirm the banner is no longer an issue.
 
@@ -102,9 +104,58 @@ image::4.10-security-taxonomy.png[]
 
 We will pause class and discuss interesting cases.
 
+TIP: If you search Google on the Lynis ID, e.g. `AUTH-9286`, you should be taken to the cisofy.com site (or perhaps other resources) which will get you started on resolving it.
+
+NOTE: Do not try to fix the banners issue. It only can be tested by logging directly into the server console (which in the case of a VM doesn't really exist), not via ssh.
+
 Be prepared to share you results, positive or negative. If you fix a vulnerability, be sure to document the steps so they could be scripted.
 
 After you have fixed one more lynis vulnerability, read http://www.sonatype.org/nexus/2015/11/13/did-you-wake-up-to-an-alert-about-the-java-deserialization-vulnerability and discuss with your neighbors. What is the National Vulnerability Database? Be prepared to discuss in class.
+
+
+== Permanently fixing one or more vulnerabilities (10+ extra credit points).
+
+First, you need to figure out the configuration change required to fix the vulnerability. It should be something that you can script.
+
+* something installed that doesn't need to be
+* something that should be there, that isn't
+* permissions that need to be tightened down.
+
+* 1 vulnerability fixed: 10 points
+* 2 : 15 points
+* 3 : 20 points.
+* 10 or more: 30 points
+
+In order to gain the extra credit:
+
+* Create a new VM and run the vulnerability scanner.
+* Save the output to a text file, named "initial-output.log"
+* Run the necessary commands to fix the vulnerability.
+* Put them into a shell script.
+* Call the shell script from your vagrant file
+* Vagrant destroy and vagrant up your machine, confirming that it comes up with the correct fix(es)
+* Run the scanner again, saving the output to "final-output.log" and showing that they are fixed
+
+IMPORTANT: Submit the 2 output files, your modified Vagrantfile, and your script for extra credit.
+
+
+
+You can script commands like
+
+ apt-get install <some program>
+
+You can't script an interactive text editor (like nano). To change configuration files, sed is your friend. Simple example:
+
+....
+char@seis664:~$ echo myScriptContent > test.txt
+char@seis664:~$ cat test.txt
+myScriptContent
+char@seis664:~$ sed -i s/Script/New/g test.txt
+char@seis664:~$ cat test.txt
+myNewContent
+....
+
+You may need to Google "regular expressions."
 
 === Web vulnerability testing scan
 (if time)
@@ -129,30 +180,6 @@ cd ZAP_2.5.0/
 We run this script externally to the machine being tested, and give it the URL. It then probes the URL and the server, as a form of penetration testing. It will again generate a number of findings. Research them and figure out if there is an easy fix. Share with class on Slack.
 
 NOTE: You will get raw XML dumped to the terminal. You can cut and paste this to an *.xml document on your workstation and open it with a browser for an easier view.
-
-== Permanently fixing one or more vulnerabilities (10+ extra credit points).
-
-First, you need to figure out the configuration change required to fix the vulnerability. It should be something that you can script.
-
-* something installed that doesn't need to be
-* something that should be there, that isn't
-* permissions that need to be tightened down.
-
-In order to gain the extra credit:
-
-* Create a new VM and run the vulnerability scanner. 
-* Save the output to a text file, named "initial-output.log"
-* Run the necessary commands to fix the vulnerability.
-* Put them into a shell script.
-* Call the shell script from your vagrant file
-* Vagrant destroy and vagrant up your machine, confirming that it comes up with the correct fix(es)
-* Run the scanner again, saving the output to "final-output.log" and showing that they are fixed
-* Submit the 2 output files, your modified Vagrantfile, and your script for extra credit. 
-
-1 vulnerability fixed: 10 points
-2 : 15 points
-3 : 20 points.
-10 or more: 30 points
 
 === Optional ITSM process
 Time and instructor lab preparation permitting:

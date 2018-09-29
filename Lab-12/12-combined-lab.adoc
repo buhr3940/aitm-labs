@@ -1,9 +1,4 @@
-== SEIS660 Lab 12: Enterprise Architecture & IT Portfolio Management
-
-12/2016 notes
- continuing confusion over late vs early retirement - clarify
-
- fix the double alphabet problem
+== Lab 12: Enterprise Architecture & IT Portfolio Management
 
 Version 2, 12/11/2015
 
@@ -67,7 +62,7 @@ Indicators of technical fitness:
 * High SLA adherence (incidents)
 ** _Low would indicate low fitness_
 * Current assets & technology platforms
-** _Older indicates low fitness_
+** _Older indicates low fitness. An earlier sunset date means the product is more outdated; again, lower fitness._
 * NPS from support teams & architects
 ** _High is good_
 * High/increasing customer/user satisfaction score
@@ -79,7 +74,7 @@ IMPORTANT: Remember that "services" and "technology products," for the purposes 
 
 == The portfolio spreadsheet
 
-The assignment is based on the spreadsheet titled "seis660portfolio." This spreadsheet has 3 tabs:
+The assignment is based on the spreadsheet titled "portfolioLab.xls." This spreadsheet has 3 tabs:
 
 *dictionary* - definitions of the fields, including how they are generated.
 
@@ -94,7 +89,7 @@ The infrastructure systems are by far the most expensive. This is because they s
 
 The "romeo" system is also questionable. Have a look at it and discuss. What depends on it?
 
-On the other hand, the "pi" system has an aging asset base, technology products close to retirement, and is a well regarded revenue producing system with considerable heft and significant dependencies in column P. Its request should be fully supported. It would be in the bottom right quadrant. This is the money quadrant; systems that land here in general should get some love. Notice that there is an inconsistency between the technical team's opinion and the objective reality of the asset and technology base. This might need further investigation.
+On the other hand, the "pi" system has an aging asset base, technology products close to retirement (that is, an _earlier_ retirement year), and is a well regarded revenue producing system with considerable heft and significant dependencies in column P. Its request should be fully supported. It would be in the bottom right quadrant. This is the money quadrant; systems that land here in general should get some love. Notice that there is an inconsistency between the technical team's opinion and the objective reality of the asset and technology base. This might need further investigation.
 
 The "zeta" system is well regarded technically, but has room for improvement in terms of business fit. It would be top left in the quadrant. Some re-evaluation of its mission might be appropriate. It is not clear why they would want significant enhancement dollars as both the asset base and the technology dependencies are current. Note that the SLAs adherence is poor; this might be why.
 
@@ -102,13 +97,16 @@ Finally, the "delta" system appears solid both in terms of business and technica
 
 Out of this brief analysis, we clearly would prioritize pi and deprioritize zulu. The other two require further investigation and would land in the middle of the pack.
 
-In terms of product, if you sort the spreadsheet by first column N and then column J, you will see that Product2 and Product8 support significant systems (add up the heft scores for the systems they support.) It might be good to prioritize sunsetting those products. Think about what this means in terms of your recommendations.
+In terms of product, if you sort the spreadsheet by first column N and then column J, you will see that Product2 and Product8 support significant systems (add up the heft scores for the systems they support.) It might be good to prioritize sunsetting those products. Think about what this means in terms of your recommendations. Often, services that add little value are sunset when their supporting products become obsolete.
+
+IMPORTANT: Product is NOT the same as service. Services DEPEND ON products, e.g. your e-commerce Web site depending on the Oracle database. A _product_ might be approaching or past its sunset date, but the _service_ needs to be kept running - you make money off it! A product running past its sunset date is very risky, due to lack of support. Most services depend on multiple products, but we simplify to one for this exercise.
+
 
 == The exercise
 
 === Setting up
 
-1. Download the spreadsheet from https://github.com/StThomas-SEIS660/Lab-12/blob/master/seis660portfolio.xls. Click "View Raw" to download.
+1. Download the spreadsheet from https://github.com/dm-academy/aitm-labs/blob/master/Lab-12/portfolioLab.xls. Click "View Raw" to download.
 2. Create a new tab and name it for your team. Save your spreadsheet somewhere you can find it.
 3. Go to the dataset-gen tab and hit F9.
 4. Select all and paste AS FORMATTED VALUES to your new tab.
@@ -130,7 +128,14 @@ On a Powerpoint deck, based on the matrix above, the spreadsheet definitions, an
 
 Again, give your reasoning.
 
-5 pts extra credit: prepare a bubble chart for some subset of the data.
+10 pts extra credit: prepare a bubble chart for some subset of the data. Your bubble chart must have the dimensions clearly labeled, including what the meaning of size and color are. Recommend:
+
+* Y-axis - business criticality
+* X-axis - technology soundness
+* Size: request
+* Color: application vs infrastructure
+
+You may need to define some of your own calculations (e.g. adding some factors) to achieve these recommendations. I reserve the right to give partial credit, or send back to you for rework.
 
 Time permitting, we will review some of these presentations in class.
 

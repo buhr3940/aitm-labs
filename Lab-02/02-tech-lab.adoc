@@ -9,6 +9,7 @@ This is a long lab, with the following learning objectives:
 * Using your Linux skills for simple server configuration
 * Learning the basics of Git source control
 * Combining the three previous skills into an automated "infrastructure as code" use case
+* Optionally, install Docker and Node on your VM.
 
 ==  1. Running Vagrant on the Course Server
 
@@ -82,6 +83,8 @@ and after it, add the line:
  config.vm.box_url = "/var/vagrant/boxes/xenial64.box"
 
 Exit nano, saving the file.
+
+Whether on the server or on your laptop:
 
 Now, cross your fingers and enter the following command:
 
@@ -170,11 +173,15 @@ Lab 02: You must have successfully created your own virtual machine (VM) using V
 
 You will do the exercises in this part on your new Vagrant VM.
 
-Using the skills you learned in the previous lab (in particular, the mkdir, cd, and touch commands),  perform the following steps:
+One additional command you will need is the `touch` command. It creates an empty file of a given name. For example, `touch aa` will create an empty file named `aa`.
+
+Using the skills you learned in the previous lab (in particular, the `mkdir`, `cd`, and `rm` commands), along with `touch`,  perform the following steps:
 
 **Configure a directory structure**
 
-* First, create directories A, C, and D all at the same level
+* First, create a directory called `main`
+
+* Inside this directory, create directories A, C, and D all at the same level
 
 * Directory A should contain sub-directories named B, C and D
 
@@ -200,7 +207,13 @@ NOTE: The "-y" avoids you having to type "yes" to approve the install. It is cri
 
 If you get any kind of access or permissions error, please be sure you are in YOUR vagrant machine, not the main course server (where you do not have permissions to install things.) Re-read the above material carefully.
 
-Use tree to inspect your directory structure. It should look like:
+If it gives an error indicating tree is not found, type
+
+`sudo apt-get update`
+
+to refresh your package repository. Then re-execute `sudo apt-get install -y tree`
+
+Once installed, use tree to inspect your directory structure. It should look like:
 
  vagrant@xenial64:~$ tree
 
@@ -357,7 +370,9 @@ Now, edit the file again.
 
 Add "Hello Again" as a second line and exit nano in the usual way.
 
-You have now made a change, relative to what you committed. You can see that change through issuing the command "git diff":
+You have now made a change, relative to what you committed. You can see that change through issuing the command `git diff`:
+
+Note: your results may look somewhat different from below, but you should be able to see what changed.
 
 ....
 YourStudentID@serverXXX:~/examples$ git diff
@@ -370,7 +385,7 @@ index 9801343..fcb9459 100644
 +Hello Again
 ....
 
-This clearly shows that Hello Again has been added.
+This clearly shows that Hello Again has been added (notice the `+` symbol).
 
 Commit it again (you only need to add it once):
 ....
@@ -381,7 +396,7 @@ Commit it again (you only need to add it once):
 
 Go back into nano and replace "World" with "Mars." Exit nano.
 
-Run git diff again:
+Run `git diff` again:
 
 ....
  YourStudentID@serverXXX:~/examples$ git diff
@@ -395,6 +410,7 @@ Run git diff again:
   Hello Again
 ....
 
+(Notice the `-` symbol indicating the deletion of a line.)
 Commit it again:
 
 ....
@@ -456,6 +472,8 @@ index 0000000..557db03
 
 There may be more, reflecting the earlier history of the examples repo. Hit "q" to exit the commit review.
 
+If you do not see changes as you expect: have you committed? `git diff` will show you uncommitted changes.
+
 All of these changes have been locally committed to your git instance. Let's send them back up to your fork at Github. You will need to authenticate (we could set up ssh to github, but not right now):
 
 ....
@@ -495,7 +513,7 @@ Instead, we will vagrant up from your ~/examples directory. A Vagrantfile has be
 
 
 ....
-teststud@serverXXX:~/examples$ vagrant up
+YourStudentID@serverXXX:~/examples$ vagrant up
 Bringing machine 'default' up with 'virtualbox' provider...
 ==> default: Importing base box 'opscode-ubuntu-14.04a'...
 ==> default: Matching MAC address for NAT networking...
@@ -574,11 +592,11 @@ total 44
 
 Run the script to confirm you can execute it (it's still empty, and will run fine - it just won't do anything):
 
-    vagrant@XXXXX:~/vagrant$ ./YourStudentID-Lab02.sh  <- notice the "./"
+    vagrant@XXXXX:/vagrant$ ./YourStudentID-Lab02.sh  <- notice the "./"
 
 Create your script by adding the commands to the script file using nano.
 
-    vagrant@XXXXX:~/vagrant$ nano YourStudentID-Lab02.sh
+    vagrant@XXXXX:/vagrant$ nano YourStudentID-Lab02.sh
 
 _Add the necessary commands so that the script does what it needs to do!_
 
@@ -646,20 +664,19 @@ vagrant@XXXXX:/vagrant$ git commit YourStudentID-Lab02.sh -m "script commit"
  create mode 100755 YourStudentID-Lab02.sh
 ....
 
-In reviewing the directory structure, there are duplicate directories. Also, it is getting messy with three directories at the same level.
+In reviewing the directory structure, there are duplicate directories. Also, it is getting messy with three directories at the same level, and the structure should actually go into its own directory in your home directory.
 
 Fix the directory creation logic so that
 
 1. There are no duplicate C and D directories (you will need to use another letter).
-2. All the directories are inside a single directory called "main".
+2. All the directories are inside a single directory called "main" inside your home directory (remember, `cd ~` puts you in your home directory for whatever machine you're on).
 
 Run the updated script & confirm it works. You should see a tree output like:
 
 ....
 vagrant@vagrant:/vagrant$ tree
 .
-├── example-Instructions.md
-├── LICENSE
+
 ├── main
 │   ├── A
 │   │   ├── aa
@@ -730,8 +747,8 @@ YourStudentID@serverXXX:~/examples$ cat YourStudentID-Lab02.sh
 # To run, type ./YourID-Lab02.sh (you need the "./")
 # It must have permissions starting with a "7"
 
-mkdir -p main/{A/{B,C,D},E/{F,G},H/{I,J/{K,L},M}}
-touch main/{A/{aa,B/bb,C/cc,D/dd},E/{ee,F/ff,G/gg},H/{hh,I/ii,J/{jj,K/kk,L/ll},M/mm}}
+mkdir -p ~/main/{A/{B,C,D},E/{F,G},H/{I,J/{K,L},M}}
+touch ~/main/{A/{aa,B/bb,C/cc,D/dd},E/{ee,F/ff,G/gg},H/{hh,I/ii,J/{jj,K/kk,L/ll},M/mm}}
 apt-get -y install tree
 apt-get -y install git
 ....
@@ -747,11 +764,14 @@ YourStudentID@serverXXX:~/examples$ git add Vagrantfile
 YourStudentID@serverXXX:~/examples$ git commit -m "Vagrantfile commit"
 ....
 
+You may get a comment about untracked files. These are the files you are not going to put in source control. You may have added one or more on purpose or by accident. Do not worry about them.
+
 Edit your Vagrantfile so that it calls your *-Lab02.sh script when you provision the machine. Add the "vm.provision" line, changing MyStudentID to your ID.
 
 ....
 Vagrant.configure(2) do |config|
   config.vm.box = .....
+	config.vm.box_url = .....
   config.vm.provision             :shell, path: "./MyStudentID-Lab02.sh"
 end
 ....
@@ -774,7 +794,7 @@ Run 'do-release-upgrade' to upgrade to it.
 
 Welcome to your Vagrant-built virtual machine.
 Last login: Fri Sep 14 06:23:18 2012 from 10.0.2.2
-vagrant@precise64:~$ tree
+vagrant@precise64:~$ sudo tree /root
 .
 |-- main
 |   |-- A
@@ -811,6 +831,8 @@ vagrant@precise64:~$ git --version
 git version 1.7.9.5
 ....
 
+Why is your tree showing up under /root?
+
 Re-commit your Vagrantfile and push it back to origin. Issue a pull request for me to review your work.
 
 Exit your vm and issue the command:
@@ -822,4 +844,20 @@ Discuss:
 - Why can you commit to git on the VM without initializing the repo there? You had to at least set up your name and email. Hint: Think about the virtual directory mapping and execute the comand "ls -al" on the /vagrant directory in the VM.
 - How are git and tree getting installed, since you don't say "sudo vagrant up"?
 
-That is the end of this lab. Congratulations, this was a lot of work. Next week, we will start working on the the continuous integration pipeline with git, Java, JUnit, Tomcat, and Ant.
+== Extra credit
+
+=== Set up public/private key authentication to your Github account (5 points)
+
+Instructions readily available in various places on the internet.
+
+=== Configure a Vagrantfile to install Docker and Node (20 points)
+
+Researching on the internet, update your Vagrantfile (you may want to save your old one, or else create a new directory) so that it creates an Vagrant machine based on Docker.
+
+Configure Vagrant to launch Docker so that it spins up a Node.js container with a "hello world" app. All as code. Check it in to Github.
+
+This will not be easy, but some of you need the challenge.
+
+== Conclusion
+
+That is the end of this lab. Congratulations, this was a lot of work.
